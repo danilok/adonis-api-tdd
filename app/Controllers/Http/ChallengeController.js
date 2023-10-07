@@ -1,5 +1,6 @@
 'use strict'
 
+/** @type {typeof import('app/Models/Challenge')} */
 const Challenge = use('App/Models/Challenge')
 
 class ChallengeController {
@@ -12,6 +13,18 @@ class ChallengeController {
     })
 
     return response.created(challenge)
+  }
+
+  async all({ response }) {
+    const challenges = await Challenge.all()
+
+    return response.ok(challenges)
+  }
+
+  async show({ response, params }) {
+    const challenge = await Challenge.findOrFail(params.id)
+
+    return response.ok(challenge)
   }
 }
 
