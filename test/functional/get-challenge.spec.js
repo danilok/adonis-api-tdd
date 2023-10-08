@@ -24,6 +24,28 @@ test('can get a challenge by id', async ({ assert, client }) => {
   response.assertJSONSubset({ title: challenge.title, id: challenge.id })
 })
 
+test('can get a challenge by id when created with association', async ({ assert, client }) => {
+  assert.plan(2)
+
+  const user = await Factory.model('App/Models/User').create()
+  const challenge = await Factory.model('App/Models/Challenge').make()
+
+  await challenge.user().associate(user)
+  
+  const response = await client.get(`/api/challenges/${challenge.id}`).end()
+
+  debugApiResponseError(response)
+
+  response.assertStatus(200)
+
+  response.assertJSONSubset({
+    title: challenge.title,
+    id: challenge.id,
+    user_id: user.id
+  })
+})
+
+
 test('status 404 if id do not exist', async ({ assert, client }) => {
   assert.plan(1)
   

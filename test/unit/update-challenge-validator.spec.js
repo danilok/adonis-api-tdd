@@ -2,17 +2,17 @@
 
 const Factory = use('Factory')
 /** @type {import('@adonisjs/vow/src/Suite/index')} */
-const { test, before } = use('Test/Suite')('CreateChallengeValidator')
+const { test, before } = use('Test/Suite')('UpdateChallengeValidator')
 /** @type {typeof import('@adonisjs/validator/src/Validator')} */
 const { validate, validateAll } = use('Validator')
 
-/** @type {typeof import('app/Validators/CreateChallenge')} */
-const CreateChallenge = use('App/Validators/CreateChallenge');
+/** @type {typeof import('app/Validators/UpdateChallenge')} */
+const UpdateChallenge = use('App/Validators/UpdateChallenge');
 
 /** @typedef {import('chai')} Chai */
 // https://www.chaijs.com/api/assert/
 
-let createChallengeValidator
+let updateChallengeValidator
 let rules
 let messages
 let runValidation
@@ -20,10 +20,10 @@ let validTitle
 let validDescription
 
 before(async () => {
-  createChallengeValidator = new CreateChallenge()
-  rules = createChallengeValidator.rules
-  messages = createChallengeValidator.messages
-  const isToValidateAll = createChallengeValidator.validateAll
+  updateChallengeValidator = new UpdateChallenge()
+  rules = updateChallengeValidator.rules
+  messages = updateChallengeValidator.messages
+  const isToValidateAll = updateChallengeValidator.validateAll
   runValidation = (data) => {
     return isToValidateAll
     ? validateAll(data, rules, messages)
@@ -34,16 +34,6 @@ before(async () => {
   validDescription = description
 });
 
-/**
- * @param {object} ctx
- * @param {Chai.AssertStatic} ctx.assert
- */
-async function forceTyping ({ assert }) {
-  assert.equal(true, true)
-}
-
-test('ensure typing for assert parameter', forceTyping)
-
 test("validation should pass when valid data is given", async ({ assert }) => {
   assert.plan(1)
 
@@ -51,6 +41,17 @@ test("validation should pass when valid data is given", async ({ assert }) => {
     title: validTitle,
     description: validDescription,
   };
+
+  const validation = await runValidation(data)
+  const isValidationFailed = validation.fails()
+
+  assert.isNotTrue(isValidationFailed)
+})
+
+test("validation should pass when no data is given", async ({ assert }) => {
+  assert.plan(1)
+
+  const data = {};
 
   const validation = await runValidation(data)
   const isValidationFailed = validation.fails()
@@ -98,27 +99,6 @@ test("validation should not pass when invalid title is given", async ({ assert }
       message: 'title is not a valid string',
       field: 'title',
       validation: 'string'
-    }
-  ])
-})
-
-test("validation should not pass when no title is given", async ({ assert }) => {
-  assert.plan(2)
-
-  const data = {
-    description: validDescription,
-  };
-
-  const validation = await runValidation(data)
-  const isValidationFailed = validation.fails()
-  const errorMessages = validation.messages()
-
-  assert.isTrue(isValidationFailed)
-  assert.deepEqual(errorMessages, [
-    {
-      message: 'title is required',
-      field: 'title',
-      validation: 'required'
     }
   ])
 })
