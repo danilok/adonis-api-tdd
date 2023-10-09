@@ -29,3 +29,7 @@ Route.group(() => {
 
 Route.get('/api/me/challenges/', 'MeController.challenges')
   .middleware(['auth'])
+
+Route.group(() => {
+  Route.get('/', 'MovieController.index')
+}).prefix('/api/movies')
