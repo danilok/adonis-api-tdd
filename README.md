@@ -30,3 +30,4 @@ adonis migration:run
 # References:
 - https://equimper.com/blog/build-a-rest-api-with-adonisjs-and-tdd-part-1
 - https://www.mikealche.com/software-development/how-to-set-up-a-testing-for-adonisjs-apps
+- https://michaelzanggl.com/articles/tdd-with-adonisjs-1/

@@ -33,3 +33,5 @@ Route.get('/api/me/challenges/', 'MeController.challenges')
 Route.group(() => {
   Route.get('/', 'MovieController.index')
 }).prefix('/api/movies')
+
+Route.resource('/threads', 'ThreadController').only(['store'])
