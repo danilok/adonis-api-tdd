@@ -34,4 +34,6 @@ Route.group(() => {
   Route.get('/', 'MovieController.index')
 }).prefix('/api/movies')
 
-Route.resource('/threads', 'ThreadController').only(['store', 'destroy'])
+Route.resource('/threads', 'ThreadController')
+  .only(['store', 'destroy'])
+  .middleware(['auth'])

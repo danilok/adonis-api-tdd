@@ -38,6 +38,10 @@ class User extends Model {
   challenges() {
     return this.hasMany('App/Models/Challenge')
   }
+
+  threads() {
+    return this.hasMany('App/Models/Thread')
+  }
 }
 
 module.exports = User

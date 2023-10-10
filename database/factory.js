@@ -36,9 +36,10 @@ Factory.blueprint('App/Models/Movie', (faker, index, data) => {
   }
 })
 
-Factory.blueprint('App/Models/Thread', (faker) => {
+Factory.blueprint('App/Models/Thread', async (faker) => {
   return {
     title: faker.word(),
     body: faker.paragraph(),
+    user_id: (await Factory.model('App/Models/User').create()).id,
   }
 })
