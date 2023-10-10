@@ -35,3 +35,10 @@ Factory.blueprint('App/Models/Movie', (faker, index, data) => {
     ...data,
   }
 })
+
+Factory.blueprint('App/Models/Thread', (faker) => {
+  return {
+    title: faker.word(),
+    body: faker.paragraph(),
+  }
+})
