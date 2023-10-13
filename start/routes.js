@@ -35,5 +35,8 @@ Route.group(() => {
 }).prefix('/api/movies')
 
 Route.resource('/threads', 'ThreadController')
-  .only(['store', 'destroy'])
-  .middleware(['auth'])
+  .only(['store', 'destroy', 'update'])
+  .middleware(new Map([
+    [['store', 'destroy', 'update'], ['auth']],
+    [['destroy', 'update'], ['modifyThreadPolicy']],
+  ]))
