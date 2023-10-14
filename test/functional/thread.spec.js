@@ -147,3 +147,99 @@ test('thread can not be updated by a user who did not create it', async ({ asser
 
   response.assertStatus(403)
 })
+
+test('can not create thread with no body or title', async ({ assert, client }) => {
+  assert.plan(4)
+
+  const user = await Factory.model('App/Models/User').create()
+  let response = await client
+    .post('/threads')
+    .header('accept', 'application/json')
+    .loginVia(user)
+    .send({
+      title: 'test title'
+    })
+    .end()
+
+  // debugApiResponseError(response)
+
+  response.assertStatus(400)
+  response.assertJSONSubset([{ message: 'required validation failed on body' }])
+
+  response = await client
+    .post('/threads')
+    .header('accept', 'application/json')
+    .loginVia(user)
+    .send({
+      body: 'test body'
+    })
+    .end()
+
+  // debugApiResponseError(response)
+
+  response.assertStatus(400)
+  response.assertJSONSubset([{ message: 'required validation failed on title' }])
+})
+
+test('can not update thread with no body or title', async ({ assert, client }) => {
+  assert.plan(4)
+
+  const thread = await Factory.model('App/Models/Thread').create()
+  const user = await thread.user().first()
+  const put = () => client
+    .put(thread.url())
+    .header('accept', 'application/json')
+    .loginVia(user)
+
+  let response = await put()
+    .send({
+      title: 'test title'
+    })
+    .end()
+
+  // debugApiResponseError(response)
+
+  response.assertStatus(400)
+  response.assertJSONSubset([{ message: 'required validation failed on body' }])
+
+  response = await put()
+    .send({
+      body: 'test body'
+    })
+    .end()
+
+  // debugApiResponseError(response)
+
+  response.assertStatus(400)
+  response.assertJSONSubset([{ message: 'required validation failed on title' }])
+})
+
+test('can access single resource', async ({ assert, client }) => {
+  assert.plan(2)
+
+  const thread = await Factory.model('App/Models/Thread').create()
+
+  const response = await client
+    .get(thread.url())
+    .end()
+
+  debugApiResponseError(response)
+
+  response.assertStatus(200)
+  response.assertJSON({ thread: thread.toJSON() })
+})
+
+test('can access all resource', async ({ assert, client }) => {
+  assert.plan(2)
+
+  const thread = await Factory.model('App/Models/Thread').createMany(3)
+
+  const response = await client
+    .get('threads')
+    .end()
+
+  debugApiResponseError(response)
+
+  response.assertStatus(200)
+  response.assertJSON({ threads: thread.map(thread => thread.toJSON()).sort((a, b) => a.id - b.id) })
+})
