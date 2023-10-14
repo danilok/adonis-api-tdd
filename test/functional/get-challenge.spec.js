@@ -49,7 +49,7 @@ test('can get a challenge by id when created with association', async ({ assert,
 test('status 404 if id do not exist', async ({ assert, client }) => {
   assert.plan(1)
   
-  const response = await client.get(`/api/challenges/999`).end()
+  const response = await client.get('/api/challenges/999').end()
 
   response.assertStatus(404)
 })

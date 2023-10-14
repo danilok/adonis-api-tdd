@@ -25,36 +25,36 @@ after(() => {
 })
 
 test('authorized user can create threads', async ({ assert, client }) => {
-  assert.plan(3);
+  assert.plan(3)
 
-  const user = await factory('App/Models/User').create();
+  const user = await factory('App/Models/User').create()
   const attributes = {
     title: 'test title',
     body: 'body',
-  };
+  }
 
   const response = await client
     .post('/threads')
     .loginVia(user)
     .send(attributes)
-    .end();
+    .end()
 
-  debugApiResponseError(response);
+  debugApiResponseError(response)
 
-  response.assertStatus(200);
+  response.assertStatus(200)
 
-  const thread = await Thread.firstOrFail();
-  response.assertJSON({ thread: thread.toJSON() });
+  const thread = await Thread.firstOrFail()
+  response.assertJSON({ thread: thread.toJSON() })
   response.assertJSONSubset({
     thread: {
       ...attributes,
       user_id: user.id
     }
-  });
-});
+  })
+})
 
 test('unauthenticated user cannot create threads', async ({ assert, client }) => {
-  assert.plan(1);
+  assert.plan(1)
 
   const response = await client
     .post('/threads')
@@ -62,15 +62,15 @@ test('unauthenticated user cannot create threads', async ({ assert, client }) =>
       title: 'test title',
       body: 'body'
     })
-    .end();
+    .end()
 
-  response.assertStatus(401);
-});
+  response.assertStatus(401)
+})
 
 test('can not create thread with no body or title', async ({ assert, client }) => {
-  assert.plan(4);
+  assert.plan(4)
 
-  const user = await factory('App/Models/User').create();
+  const user = await factory('App/Models/User').create()
   let response = await client
     .post('/threads')
     .header('accept', 'application/json')
@@ -78,12 +78,12 @@ test('can not create thread with no body or title', async ({ assert, client }) =
     .send({
       title: 'test title'
     })
-    .end();
+    .end()
 
   // debugApiResponseError(response)
   
-  response.assertStatus(400);
-  response.assertJSONSubset([{ message: 'required validation failed on body' }]);
+  response.assertStatus(400)
+  response.assertJSONSubset([{ message: 'required validation failed on body' }])
 
   response = await client
     .post('/threads')
@@ -92,13 +92,13 @@ test('can not create thread with no body or title', async ({ assert, client }) =
     .send({
       body: 'test body'
     })
-    .end();
+    .end()
 
   // debugApiResponseError(response)
   
-  response.assertStatus(400);
-  response.assertJSONSubset([{ message: 'required validation failed on title' }]);
-});
+  response.assertStatus(400)
+  response.assertJSONSubset([{ message: 'required validation failed on title' }])
+})
 
 test('user can not create thread where title contains profanities', async ({ assert, client }) => {
   assert.plan(1)

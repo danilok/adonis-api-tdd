@@ -1,7 +1,7 @@
 'use strict'
 
 /** @type {import('@adonisjs/vow/src/Suite/index')} */
-const { test, trait, before, after } = use('Test/Suite')('Profanity Guard')
+const { test, before, after } = use('Test/Suite')('Profanity Guard')
 /** @type {import('@adonisjs/fold/src/Ioc/index')} */
 const { ioc } = use('@adonisjs/fold')
 /** @type {typeof import('app/Services/ProfanityGuard')} */

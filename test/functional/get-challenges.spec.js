@@ -22,10 +22,8 @@ test('can get all the challenges', async ({ assert, client }) => {
   response.assertStatus(200)
 
   response.assertJSONSubset([
-    {
-      title: challenges[0].title,
-      title: challenges[1].title,
-      title: challenges[2].title,
-    }
+    { title: challenges[0].title },
+    { title: challenges[1].title },
+    { title: challenges[2].title },
   ])
 })

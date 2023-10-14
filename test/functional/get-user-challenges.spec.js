@@ -21,7 +21,7 @@ test('can get all the user challenges', async ({ assert, client }) => {
   await otherUser.challenges().saveMany(otherChallenges)
 
   const response = await client
-    .get(`/api/me/challenges`)
+    .get('/api/me/challenges')
     .loginVia(user, 'jwt')
     .end()
 
@@ -32,9 +32,7 @@ test('can get all the user challenges', async ({ assert, client }) => {
   assert.equal(response.body.length, 2, 'body does not have expected number of chanllenges: 2')
 
   response.assertJSONSubset([
-    {
-      title: challenges[0].title,
-      title: challenges[1].title,
-    }
+    { title: challenges[0].title },
+    { title: challenges[1].title },
   ])
 })

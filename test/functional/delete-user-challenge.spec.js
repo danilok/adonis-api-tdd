@@ -33,7 +33,7 @@ test('a user cannot delete a invalid challenge', async ({ assert, client }) => {
   const user = await Factory.model('App/Models/User').create()
 
   const response = await client
-    .delete(`/api/challenges/999`)
+    .delete('/api/challenges/999')
     .loginVia(user, 'jwt')
     .end()
 

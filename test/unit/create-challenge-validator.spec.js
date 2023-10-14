@@ -7,7 +7,7 @@ const { test, before } = use('Test/Suite')('CreateChallengeValidator')
 const { validate, validateAll } = use('Validator')
 
 /** @type {typeof import('app/Validators/CreateChallenge')} */
-const CreateChallenge = use('App/Validators/CreateChallenge');
+const CreateChallenge = use('App/Validators/CreateChallenge')
 
 /** @typedef {import('chai')} Chai */
 // https://www.chaijs.com/api/assert/
@@ -26,13 +26,13 @@ before(async () => {
   const isToValidateAll = createChallengeValidator.validateAll
   runValidation = (data) => {
     return isToValidateAll
-    ? validateAll(data, rules, messages)
-    : validate(data, rules, messages)
+      ? validateAll(data, rules, messages)
+      : validate(data, rules, messages)
   }
   const { title, description } = await Factory.model('App/Models/Challenge').make()
   validTitle = title
   validDescription = description
-});
+})
 
 /**
  * @param {object} ctx
@@ -44,13 +44,13 @@ async function forceTyping ({ assert }) {
 
 test('ensure typing for assert parameter', forceTyping)
 
-test("validation should pass when valid data is given", async ({ assert }) => {
+test('validation should pass when valid data is given', async ({ assert }) => {
   assert.plan(1)
 
   const data = {
     title: validTitle,
     description: validDescription,
-  };
+  }
 
   const validation = await runValidation(data)
   const isValidationFailed = validation.fails()
@@ -58,13 +58,13 @@ test("validation should pass when valid data is given", async ({ assert }) => {
   assert.isNotTrue(isValidationFailed)
 })
 
-test("validation should not pass when invalid description is given", async ({ assert }) => {
+test('validation should not pass when invalid description is given', async ({ assert }) => {
   assert.plan(2)
 
   const data = {
     title: validTitle,
     description: 123,
-  };
+  }
 
   const validation = await runValidation(data)
   const isValidationFailed = validation.fails()
@@ -80,13 +80,13 @@ test("validation should not pass when invalid description is given", async ({ as
   ])
 })
 
-test("validation should not pass when invalid title is given", async ({ assert }) => {
+test('validation should not pass when invalid title is given', async ({ assert }) => {
   assert.plan(2)
 
   const data = {
     title: 123,
     description: validDescription,
-  };
+  }
 
   const validation = await runValidation(data)
   const isValidationFailed = validation.fails()
@@ -102,12 +102,12 @@ test("validation should not pass when invalid title is given", async ({ assert }
   ])
 })
 
-test("validation should not pass when no title is given", async ({ assert }) => {
+test('validation should not pass when no title is given', async ({ assert }) => {
   assert.plan(2)
 
   const data = {
     description: validDescription,
-  };
+  }
 
   const validation = await runValidation(data)
   const isValidationFailed = validation.fails()
@@ -123,13 +123,13 @@ test("validation should not pass when no title is given", async ({ assert }) => 
   ])
 })
 
-test("validation should not pass when none valid data is given", async ({ assert }) => {
+test('validation should not pass when none valid data is given', async ({ assert }) => {
   assert.plan(3)
 
   const data = {
     title: 123,
     description: 123,
-  };
+  }
 
   const validation = await runValidation(data)
   const isValidationFailed = validation.fails()

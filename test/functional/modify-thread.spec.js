@@ -25,20 +25,20 @@ after(() => {
 })
 
 test('authorized user can delete threads', async ({ assert, client }) => {
-  assert.plan(2);
+  assert.plan(2)
 
-  const thread = await factory('App/Models/Thread').create();
-  const owner = await thread.user().first();
+  const thread = await factory('App/Models/Thread').create()
+  const owner = await thread.user().first()
 
   const response = await client
     .delete(thread.url())
     .loginVia(owner)
-    .end();
+    .end()
 
-  debugApiResponseError(response);
-  response.assertStatus(204);
-  assert.equal(await Thread.getCount(), 0);
-});
+  debugApiResponseError(response)
+  response.assertStatus(204)
+  assert.equal(await Thread.getCount(), 0)
+})
 
 test('unauthenticated user can not delete threads', async ({ assert, client }) => {
   assert.plan(1)
