@@ -1,9 +1,8 @@
 'use strict'
 
-/** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
+/** @type {import('@adonisjs/vow/src/Suite/index')} */
 const { test, trait, before } = use('Test/Suite')('Modify Thread Policy')
 const { debugApiResponseError } = require('../utils')
 
@@ -20,8 +19,8 @@ before(() => {
 test('non creator of a thread cannot modify it', async ({ assert, client }) => {
   assert.plan(1)
 
-  const thread = await Factory.model('App/Models/Thread').create()
-  const notOwner = await Factory.model('App/Models/User').create()
+  const thread = await factory('App/Models/Thread').create()
+  const notOwner = await factory('App/Models/User').create()
 
   let response = await client
     .post(`test/modify-thread-policy/${thread.id}`)
@@ -36,7 +35,7 @@ test('non creator of a thread cannot modify it', async ({ assert, client }) => {
 test('creator of a thread can modify it', async ({ assert, client }) => {
   assert.plan(1)
 
-  const thread = await Factory.model('App/Models/Thread').create()
+  const thread = await factory('App/Models/Thread').create()
   const owner = await thread.user().first()
 
   let response = await client
@@ -52,8 +51,8 @@ test('creator of a thread can modify it', async ({ assert, client }) => {
 test('moderator can modify threads', async ({ assert, client }) => {
   assert.plan(1)
 
-  const moderator = await Factory.model('App/Models/User').create({ type: 1 })
-  const thread = await Factory.model('App/Models/Thread').create()
+  const moderator = await factory('App/Models/User').create({ type: 1 })
+  const thread = await factory('App/Models/Thread').create()
 
   let response = await client
     .post(`test/modify-thread-policy/${thread.id}`)

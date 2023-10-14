@@ -12,8 +12,15 @@
 
 // Uncomment when want to run migrations
 const ace = require('@adonisjs/ace')
+/** @type {import('@adonisjs/lucid/src/Factory')} */
+const Factory = use('Factory')
 
 module.exports = (cli, runner) => {
+
+  global.factory = (model) => {
+    return Factory.model(model)
+  }
+
   runner.before(async () => {
     /*
     |--------------------------------------------------------------------------
