@@ -1,22 +1,10 @@
-# Adonis API application
+# Adonis 4 TDD 
 
-This is the boilerplate for creating an API server in AdonisJs, it comes pre-configured with.
-
-1. Bodyparser
-2. Authentication
-3. CORS
-4. Lucid ORM
-5. Migrations and seeds
+This is a study for TDD using AdonisJS 4
 
 ## Setup
 
-Use the adonis command to install the blueprint
-
-```bash
-adonis new yardstick --api-only
-```
-
-or manually clone the repo and then run `npm install`.
+Install dependencies with: `npm install`.
 
 
 ### Migrations
@@ -24,10 +12,28 @@ or manually clone the repo and then run `npm install`.
 Run the following command to run startup migrations.
 
 ```js
-adonis migration:run
+npx adonis migration:run
 ```
 
 # References:
 - https://equimper.com/blog/build-a-rest-api-with-adonisjs-and-tdd-part-1
 - https://www.mikealche.com/software-development/how-to-set-up-a-testing-for-adonisjs-apps
 - https://michaelzanggl.com/articles/tdd-with-adonisjs-1/
+
+# Run tests
+
+Run all tests: `npm run test`
+
+## E2E Tests
+- Normal mode: `npm run e2e-test`
+- Watch mode: `npm run e2e-watch`
+
+## Unit Tests
+- Normal mode: `npm run unit-test`
+- Watch mode: `npm run unit-watch`
+
+## Code coverage
+Run `npm run test:cov`
+
+# Create tests with VSCode snippet
+Type on editor `make:test`
