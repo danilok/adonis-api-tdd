@@ -243,3 +243,45 @@ test('can access all resource', async ({ assert, client }) => {
   response.assertStatus(200)
   response.assertJSON({ threads: thread.map(thread => thread.toJSON()).sort((a, b) => a.id - b.id) })
 })
+
+test('moderator can delete threads', async ({ assert, client }) => {
+  assert.plan(2)
+
+  const moderator = await Factory.model('App/Models/User').create({ type: 1 })
+  const thread = await Factory.model('App/Models/Thread').create()
+
+  const response = await client
+    .delete(thread.url())
+    .loginVia(moderator)
+    .end()
+
+  debugApiResponseError(response)
+
+  response.assertStatus(204)
+  assert.equal(await Thread.getCount(), 0)
+})
+
+test('moderator can update title and body of threads', async ({ assert, client }) => {
+  assert.plan(2)
+
+  const thread = await Factory.model('App/Models/Thread').create()
+  const moderator = await Factory.model('App/Models/User').create({ type: 1 })
+  const attributes = { title: 'new title', body: 'new body' }
+  const updatedThreadAttributes = {
+    ...thread.toJSON(),
+    ...attributes,
+  }
+
+  const response = await client
+    .put(thread.url())
+    .loginVia(moderator)
+    .send(attributes)
+    .end()
+
+  debugApiResponseError(response)
+
+  await thread.reload()
+
+  response.assertStatus(200)
+  assert.deepEqual(thread.toJSON(), updatedThreadAttributes)
+})

@@ -15,12 +15,15 @@ class ModifyThreadPolicy {
   async handle ({ params, auth, response }, next) {
     const thread = await Thread.findOrFail(params.id)
 
-    if (thread.user_id !== auth.user.id) {
-      return response.forbidden()
+    if (auth.user.isModerator()) {
+      return next()
+    }
+    
+    if (thread.user_id === auth.user.id) {
+      return next()
     }
 
-    // call next to advance the request
-    await next()
+    return response.forbidden()
   }
 }
 

@@ -21,11 +21,11 @@ test('non creator of a thread cannot modify it', async ({ assert, client }) => {
   assert.plan(1)
 
   const thread = await Factory.model('App/Models/Thread').create()
-  const notOwnser = await Factory.model('App/Models/User').create()
+  const notOwner = await Factory.model('App/Models/User').create()
 
   let response = await client
     .post(`test/modify-thread-policy/${thread.id}`)
-    .loginVia(notOwnser)
+    .loginVia(notOwner)
     .end()
 
   // debugApiResponseError(response)
@@ -37,11 +37,27 @@ test('creator of a thread can modify it', async ({ assert, client }) => {
   assert.plan(1)
 
   const thread = await Factory.model('App/Models/Thread').create()
-  const ownser = await thread.user().first()
+  const owner = await thread.user().first()
 
   let response = await client
     .post(`test/modify-thread-policy/${thread.id}`)
-    .loginVia(ownser)
+    .loginVia(owner)
+    .end()
+
+  debugApiResponseError(response)
+
+  response.assertStatus(200)
+})
+
+test('moderator can modify threads', async ({ assert, client }) => {
+  assert.plan(1)
+
+  const moderator = await Factory.model('App/Models/User').create({ type: 1 })
+  const thread = await Factory.model('App/Models/Thread').create()
+
+  let response = await client
+    .post(`test/modify-thread-policy/${thread.id}`)
+    .loginVia(moderator)
     .end()
 
   debugApiResponseError(response)
