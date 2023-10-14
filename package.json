@@ -8,6 +8,7 @@
     "start": "node server.js",
     "test": "node ace test",
     "dev": "npx adonis serve --dev",
+    "eslint": "eslint --ignore-path .gitignore .",
     "unit-test": "adonis test --glob /**/unit/*.js",
     "e2e-test": "adonis test --glob /**/functional/*.js",
     "unit-watch": "npx nodemon -x npm run unit-test",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@adonisjs/cli": "^4.0.13",
     "c8": "^8.0.1",
+    "eslint": "^8.51.0",
     "nodemon": "^3.0.1",
     "sqlite3": "^5.1.6"
   },
