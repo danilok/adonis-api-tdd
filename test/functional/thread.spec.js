@@ -3,7 +3,9 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory')
 /** @type {import('@adonisjs/vow/src/Suite/index')} */
-const { test, trait } = use('Test/Suite')('Thread')
+const { test, trait, before, after } = use('Test/Suite')('Thread')
+/** @type {import('@adonisjs/fold/src/Ioc')} */
+const { ioc } = use('@adonisjs/fold')
 /** @type {typeof import('app/Models/Thread')} */
 const Thread = use('App/Models/Thread')
 const { debugApiResponseError } = require('../utils')
@@ -11,6 +13,18 @@ const { debugApiResponseError } = require('../utils')
 trait('Test/ApiClient')
 trait('Auth/Client')
 trait('DatabaseTransactions')
+
+before(() => {
+  ioc.fake('App/Services/ProfanityGuard', () => {
+    return {
+      handle: value => value !== 'jackass'
+    }
+  })
+})
+
+after(() => {
+  ioc.restore('App/Services/ProfanityGuard')
+})
 
 test('authorized user can create threads', async ({ assert, client }) => {
   assert.plan(3)
@@ -285,3 +299,20 @@ test('moderator can update title and body of threads', async ({ assert, client }
   response.assertStatus(200)
   assert.deepEqual(thread.toJSON(), updatedThreadAttributes)
 })
+
+test('user can not create thread where title contains profanities', async ({ assert, client }) => {
+  assert.plan(1)
+
+  const user = await Factory.model('App/Models/User').create()
+  const attributes = { title: 'jackass', body: 'body' }
+  const response = await client
+    .post('/threads')
+    .loginVia(user)
+    .send(attributes)
+    .end()
+
+  // debugApiResponseError(response)
+
+  response.assertStatus(400)
+})
+
